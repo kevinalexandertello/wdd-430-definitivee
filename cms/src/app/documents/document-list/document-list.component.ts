@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Document } from '../document.model';
 @Component({
   selector: 'app-document-list',
   templateUrl: './document-list.component.html',
@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocumentListComponent implements OnInit {
 
+  documents: Array<Document> = [];
   constructor() { }
 
   ngOnInit(): void {
