@@ -9,9 +9,9 @@ import { Document } from './document.model';
 export class DocumentsComponent implements OnInit {
 
   selectedDocument!: Document;
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    console.log(this.selectedDocument);
   }
 
+  ngOnInit(): void {}
 }
