@@ -1,12 +1,8 @@
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-5 bottom">
         <app-contact-list (selectedContact)="selectedContact = $event"></app-contact-list>
     </div>
-    <div class="col-md-4">
-        <app-contact-detail *ngIf="selectedContact; elseinfoText"
-        [contact]="selectedContact"></app-contact-detail>
-        <ng-template #infoText>
-            <p>Please select a Contact!</p>
-          </ng-template>
+    <div class="col-md-offset-4">
+        <app-contact-detail *ngIf="selectedContact" [contact]="selectedContact"></app-contact-detail>
         </div>
       </div>
