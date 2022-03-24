@@ -2,7 +2,7 @@
     <div class="panel-heading">
       <div class="row pad-left-right">
         <span class="pull-left title">Documents</span>
-        <a class="btn btn-success pull-right">Add Document</a>
+        <a class="btn btn-success pull-right" routerLink="new">Add Document</a>
       </div>
     </div>
     <div class="panel-body">
@@ -10,7 +10,7 @@
         <app-document-item
         *ngFor="let documentElement of documents"
         [document]="documentElement"
-        (click)="onSelectedDocument(documentElement)"></app-document-item>
+        ></app-document-item>
       </div>
     </div>
   

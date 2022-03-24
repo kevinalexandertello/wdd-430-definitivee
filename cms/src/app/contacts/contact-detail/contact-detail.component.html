@@ -12,14 +12,16 @@
     <div class="col-xs-12">
       <div class="btn-group">
         <button
+          routerLink="edit"
           type="button"
           class="btn btn-primary">
-          Edit <span class="caret"></span>
+          Edit
         </button>
         <button
+          (click)="onDelete()"
           type="button"
           class="btn btn-primary">
-          Delete <span class="caret"></span>
+          Delete
         </button>
       </div>
     </div>
