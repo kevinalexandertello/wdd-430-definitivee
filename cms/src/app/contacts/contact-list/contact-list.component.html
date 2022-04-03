@@ -9,8 +9,15 @@
         </div>
       </div>
       <div class="row mr-5 padding">
-        <div class="col-xs-12">
-          <app-contact-item *ngFor="let contact of contacts"
-          [contact]="contact"></app-contact-item>
-        </div>
+        <div class="col-xs-12"
+        id="contactList"
+        cdkDropList
+        #contactList="cdkDropList"
+        [cdkDropListData]="contacts"
+        [cdkDropListConnectedTo]="['groupList']">
+        <app-contact-item 
+          *ngFor="let contactElement of contacts"
+          [contact]="contactElement"
+          cdkDrag></app-contact-item>
+          </div>
       </div>
