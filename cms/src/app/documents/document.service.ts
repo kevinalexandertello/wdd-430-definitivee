@@ -1,6 +1,7 @@
 import { Injectable , EventEmitter} from '@angular/core';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Document } from './document.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Subscription } from 'rxjs';
 
 
@@ -9,18 +10,32 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class DocumentService {
 
-  documents: Array<Document>  = [];
+  documents: Document[] = [];
   highDocumentId!: number;
   documentSelectedEvent = new EventEmitter<Document>();
   documentChanged = new EventEmitter<Document[]>();
   documentListChangedEvent = new Subject<Document[]>();
   
-  constructor() { 
-    this.documents = MOCKDOCUMENTS;
+  constructor(private http: HttpClient) {
+    this.documents = this.getDocuments()
+    
     this.highDocumentId = this.getHighId();
   }
 
-  getDocuments(): Array<Document> {
+  getDocuments(): Document[] {
+
+    this.http.get<{ documents: Document[] }>('https://kevintelloalexander-222e9-default-rtdb.firebaseio.com/documents.json')
+      .subscribe((documents: any) => {
+        this.documents = documents;
+        this.highDocumentId = this.getHighId();
+
+        this.documents.sort((x, y) => (x.name < y.name) ? 1 : (x.name > y.name) ? -1 : 0)
+        this.documentListChangedEvent.next(this.documents.slice());
+      },
+        (error: any) => {
+          console.log('Error:', error);
+        }
+      )
     return this.documents.slice();
   } 
 
@@ -36,8 +51,7 @@ export class DocumentService {
     this.highDocumentId++;
     newDocument.id = this.highDocumentId.toString();
     this.documents.push(newDocument);
-    let documentListClone: Document[] = this.documents.slice();
-    this.documentListChangedEvent.next(documentListClone);
+    this.storeDocuments();
   }
 
   updateDocument(oldDocument: Document, newDocument: Document) {
@@ -52,8 +66,7 @@ export class DocumentService {
 
     newDocument.id = oldDocument.id;
     this.documents[position] = newDocument;
-    let documentListClone: Document[] = this.documents.slice();
-    this.documentListChangedEvent.next(documentListClone);
+    this.storeDocuments();
   }
 
   deleteDocument(document: Document): void {
@@ -67,8 +80,7 @@ export class DocumentService {
     }
 
     this.documents.splice(position, 1);
-    let documentListClone: Document[] = this.documents.slice();
-    this.documentListChangedEvent.next(documentListClone);
+    this.storeDocuments();
   }
 
   getHighId(): number {
@@ -81,5 +93,14 @@ export class DocumentService {
     });
 
     return maxId;
+  }
+  storeDocuments() {
+    let documents = JSON.stringify(this.documents);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put('https://kevintelloalexander-222e9-default-rtdb.firebaseio.com/documents.json', documents, { headers: headers })
+      .subscribe( () => { 
+        this.documentListChangedEvent.next(this.documents.slice()); 
+      });
   }
 }
